@@ -1,0 +1,119 @@
+# Serkan Koyuncu - serkan@koyuncu.org
+# 10-06-2012
+
+detect_relations:      true
+options:
+  type:    INNODB
+  collate: utf8_turkish_ci
+  charset: utf8
+
+
+skForm:
+  actAs:
+    Timestampable: ~
+    I18n:
+      fields: [baslik, description, mesaj, button_text]
+  columns:
+    title:        string(100) # internal use
+    baslik:       string(255)
+    description:  string(255) 
+    mesaj:        string(40000)
+    button_text:  string(255)
+    emails:       { type: string(40000) }
+    subject_prefix:  string(255)
+  relations:
+    FormMembers:
+      local:   id
+      foreign: sk_form_id
+      class:   skFormMember
+      type:    many
+skFormMember:
+  actAs:
+    Timestampable: ~
+    Sortable:
+      uniqueBy:  [sk_form_id]
+    I18n:
+      fields: [label, description]
+  columns:
+    sk_form_id:     integer
+    tip:            string(100) # text, textarea, html, tarih, numeric
+    varsayilan:     string(255)
+    title:          string(100) # Internal use
+    label:          string(255)
+    description:    string(255)
+    
+    # text, textarea, html
+    max:            { type: integer, default: 0 }
+    class:          string(100)
+    max_error:      string(255)
+    required:       { type: boolean, default: false }
+    required_message: string(255)
+    html:           { type: boolean, default: false }
+    html_options:   string(255)
+    
+    # Date - Time
+    is_date:        { type: boolean, default: false }
+    is_time:        { type: boolean, default: false }
+    date_format:    string(50)
+    time_format:    string(50)
+    max_date:       datetime
+    min_date:       datetime
+    min_error:      string(255)
+    is_range:       { type: boolean, default: false }
+
+    # Numeric
+    min:            { type: integer, default: 0 }
+    allow_float:    { type: boolean, default: false }
+    
+    # Combo
+    items:          string(40000) # items should be comma separated
+    item_values:    string(40000)
+    include_empty:  { type: boolean, default: false }
+    
+    # Checkbox
+    selected_value: string(255)
+    
+    # Radio
+    items:          string(40000)
+    item_values:    string(40000)
+    
+  relations:
+    Form:
+      local:   sk_form_id
+      foreign: id
+      class:   skForm
+      onDelete: CASCADE
+#skFormValidator:
+#  columns:
+#    required:       { type: boolean, default: false }
+#    cls:            string(150)
+
+skFormData:
+  actAs:
+    Timestampable: ~
+    Ipable: ~
+  relations:
+    Form:
+      local:   sk_form_id
+      foreign: id
+      class:   skForm
+      onDelete: CASCADE
+  columns:
+    sk_form_id:     integer
+
+skFormMemberData:
+  relations:
+    FormData:
+      local:   sk_form_data_id
+      foreign: id
+      class:   skFormData
+    FormMember:
+      local:   sk_form_member_id
+      foreign: id
+      class:   skFormMember
+      onDelete: CASCADE
+  columns:
+    sk_form_data_id:     integer
+    sk_form_member_id:   integer
+    value:               string(40000)
+    

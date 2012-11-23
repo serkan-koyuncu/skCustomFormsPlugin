@@ -1,0 +1,33 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           skForm
+    theme:                 admin
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          sk_custom_forms_admin
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+
+    config:
+      actions: ~
+      fields:  ~
+      list:    
+        display:           [=title, created_at]
+        title:             Formlar
+        max_per_page:      999999
+        object_actions:
+          members:
+            label: Members
+            action: members_list
+          _edit: ~
+          _delete: ~
+      filter: 
+        class: false
+      form:    ~
+      edit:
+        title: Form düzenle
+      new:     
+        title: Yeni form ekle
